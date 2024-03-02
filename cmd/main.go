@@ -4,8 +4,10 @@ import (
 	"fmt"
 )
 
-var i int = 0
+var i = 1
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Printf("Hello, World! %d", i)
+	i++
+	fmt.Printf("Hello, World! %d", i)
 }
