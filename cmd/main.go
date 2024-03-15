@@ -23,7 +23,6 @@ type server struct {
 
 // Create ...
 func (s *server) Create(_ context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-
 	log.Printf("User name: %s", req.GetInfo().Name)
 
 	return &desc.CreateResponse{
@@ -33,7 +32,6 @@ func (s *server) Create(_ context.Context, req *desc.CreateRequest) (*desc.Creat
 
 // Get ...
 func (s *server) Get(_ context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-
 	log.Printf("User id: %d", req.GetId())
 
 	return &desc.GetResponse{
@@ -42,7 +40,7 @@ func (s *server) Get(_ context.Context, req *desc.GetRequest) (*desc.GetResponse
 			Info: &desc.UserInfo{
 				Name:  gofakeit.Name(),
 				Email: gofakeit.Email(),
-				Role:  desc.Role_user,
+				Role:  desc.Role_USER,
 			},
 			Password:  "***",
 			CreatedAt: timestamppb.New(gofakeit.Date()),
@@ -53,20 +51,16 @@ func (s *server) Get(_ context.Context, req *desc.GetRequest) (*desc.GetResponse
 
 // Update ...
 func (s *server) Update(_ context.Context, req *desc.UpdateRequest) (*emptypb.Empty, error) {
-
 	log.Printf("User id: %d", req.GetId())
 
-	out := new(emptypb.Empty)
-	return out, nil
+	return new(emptypb.Empty), nil
 }
 
 // Delete ...
 func (s *server) Delete(_ context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
-
 	log.Printf("User id: %d", req.GetId())
 
-	out := new(emptypb.Empty)
-	return out, nil
+	return new(emptypb.Empty), nil
 }
 
 // Main
