@@ -19,3 +19,9 @@
 
 # Go workspace file
 go.work
+
+.idea
+/bin/
+/.devcontainer/
+.DS_Store
+/**/.DS_Store
