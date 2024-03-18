@@ -12,18 +12,27 @@ import (
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	sq "github.com/Masterminds/squirrel"
 	desc "github.com/ebezgodov/auth/pkg/user_v1"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 const grpcPort = 50051
 
 type server struct {
 	desc.UnimplementedUserV1Server
+	pool *pgxpool.Pool
 }
 
 // Create ...
 func (s *server) Create(_ context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
 	log.Printf("User name: %s", req.GetInfo().Name)
+
+	builderInsert := sq.Insert("note").
+		PlaceholderFormat(sq.Dollar).
+		Columns("title", "body").
+		Values(gofakeit.City(), gofakeit.Address().Street).
+		Suffix("RETURNING id")
 
 	return &desc.CreateResponse{
 		Id: gofakeit.Int64(),
