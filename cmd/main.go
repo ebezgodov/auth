@@ -43,6 +43,14 @@ func sha512_pwd(password string) string {
 
 // Create ...
 func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
+	if req.GetInfo() == nil || req.GetInfo().Name == "" || req.Info.GetEmail() == "" || req.GetPassword() == "" || req.GetInfo().Role.String() == "" {
+		return nil, fmt.Errorf("name, email, password and role are required")
+	}
+
+	if req.GetPassword() != req.GetPasswordConfirm() {
+		return nil, fmt.Errorf("passwords do not match")
+	}
+
 	builderInsert := sq.Insert("auth").
 		PlaceholderFormat(sq.Dollar).
 		Columns("user_name", "email", "user_role", "user_password").
@@ -116,11 +124,20 @@ func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetRespon
 func (s *server) Update(ctx context.Context, req *desc.UpdateRequest) (*emptypb.Empty, error) {
 	builderUpdate := sq.Update("auth").
 		PlaceholderFormat(sq.Dollar).
-		Set("user_name", req.GetInfo().Name.Value).
-		Set("email", req.GetInfo().Email.Value).
-		Set("user_role", req.GetRole()).
 		Set("updated_at", time.Now()).
 		Where(sq.Eq{"id": req.GetId()})
+
+	if req.GetInfo() != nil && req.GetInfo().Name != nil {
+		builderUpdate = builderUpdate.Set("user_name", req.GetInfo().Name.Value)
+	}
+
+	if req.GetInfo() != nil && req.GetInfo().Email != nil {
+		builderUpdate = builderUpdate.Set("email", req.GetInfo().Email.Value)
+	}
+
+	if req.GetRole().String() != "" {
+		builderUpdate = builderUpdate.Set("user_role", req.GetRole())
+	}
 
 	query, args, err := builderUpdate.ToSql()
 	if err != nil {
