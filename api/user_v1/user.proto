@@ -61,6 +61,7 @@ message GetResponse {
 message UpdateRequest {
     int64 id = 1;
     UpdateUserInfo info = 2;
+    Role role = 3;
 }
 
 message DeleteRequest {
